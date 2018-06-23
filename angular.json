@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngGraph": {
+    "myGraph": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngGraph",
+            "outputPath": "dist/myGraph",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -50,18 +50,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngGraph:build"
+            "browserTarget": "myGraph:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngGraph:build:production"
+              "browserTarget": "myGraph:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngGraph:build"
+            "browserTarget": "myGraph:build"
           }
         },
         "lint": {
@@ -79,5 +79,5 @@
       }
     }
   },
-  "defaultProject": "ngGraph"
+  "defaultProject": "myGraph"
 }
