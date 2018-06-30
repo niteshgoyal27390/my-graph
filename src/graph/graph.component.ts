@@ -1,4 +1,5 @@
-import { Component, ViewChild, OnInit } from "@angular/core";
+import { Component, ViewChild, OnInit, ElementRef } from "@angular/core";
+import Utils from "./utilities/graph.helper";
 
 @Component({
     selector: 'my-graph',
@@ -6,36 +7,44 @@ import { Component, ViewChild, OnInit } from "@angular/core";
 })
 
 export class GraphComponent implements OnInit {
-    @ViewChild('myCanvas') canvas
+    @ViewChild('myCanvas') canvas: ElementRef
     private context: CanvasRenderingContext2D
 
 
     ngOnInit(): void {
-        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-        //Add 'implements OnInit' to the class.
+        this.context = this.canvas.nativeElement.getContext('2d');
+
+        // TODO - Need to move the data part in service
+        let data = {
+            values: [
+                { X: "Jan", Y: 12 },
+                { X: "Feb", Y: 28 },
+                { X: "Mar", Y: 18 },
+                { X: "Apr", Y: 34 },
+                { X: "May", Y: 40 },
+            ]
+        };
+
         let xPadding = 30;
         let yPadding = 30;
-        let canvas = this.canvas.nativeElement;
-        this.context = canvas.getContext('2d');
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = '#333';
-        this.context.textAlign = "center";
 
         // Draw the axises
-        this.context.beginPath();
-        this.context.moveTo(xPadding, 0);
-        this.context.lineTo(xPadding, canvas.height - yPadding);
-        this.context.lineTo(canvas.width, canvas.height - yPadding);
-        this.context.stroke();
+        Utils.drawXAndYAxises(this.canvas, xPadding, yPadding);
 
-        // Draw the Y value texts
-        this.context.textAlign = "right"
-        this.context.textBaseline = "middle";
-        
-        for(let i = 0; i < 60; i += 10) {
-            this.context.fillText(i.toString(), xPadding - 10, i*1);
+        // Draw the texts along the X-axis
+        data.values.forEach((element, index) => {
+            this.context.fillText(element.X, Utils.getXPixel(this.canvas, index, xPadding, data), this.canvas.nativeElement.height - yPadding + 20);
+        });
+
+        this.context.textAlign = 'right';
+        this.context.textBaseline = 'middle';
+
+
+
+        for (let i = 0; i < Utils.getMaxY(data); i += 10) {
+            this.context.fillText(i.toString(), xPadding - 10, Utils.getYPixel(this.canvas, i,  yPadding, data));
         }
         
-        this.context.strokeStyle = '#f00';
+        this.context.stroke()
     }
 }
