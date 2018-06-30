@@ -22,6 +22,7 @@ export class GraphComponent implements OnInit {
                 { X: "Mar", Y: 18 },
                 { X: "Apr", Y: 34 },
                 { X: "May", Y: 40 },
+                { X: "June", Y: 90 },
             ]
         };
 
@@ -33,18 +34,39 @@ export class GraphComponent implements OnInit {
 
         // Draw the texts along the X-axis
         data.values.forEach((element, index) => {
-            this.context.fillText(element.X, Utils.getXPixel(this.canvas, index, xPadding, data), this.canvas.nativeElement.height - yPadding + 20);
+            this.context.fillText(element.X,
+                Utils.getXPixel(this.canvas, index, xPadding, data),
+                this.canvas.nativeElement.height - yPadding + 20);
         });
 
         this.context.textAlign = 'right';
         this.context.textBaseline = 'middle';
 
-
-
+        // Draw the texts along the Y-axis
         for (let i = 0; i < Utils.getMaxY(data); i += 10) {
-            this.context.fillText(i.toString(), xPadding - 10, Utils.getYPixel(this.canvas, i,  yPadding, data));
+            this.context.fillText(i.toString(),
+                xPadding - 10,
+                Utils.getYPixel(this.canvas, i, yPadding, data));
         }
-        
+
         this.context.stroke()
+
+        this.context.strokeStyle = '#f00';
+        this.context.beginPath();
+        this.context.lineWidth = 10
+        this.context.moveTo(Utils.getXPixel(this.canvas, 0, xPadding, data),
+                Utils.getYPixel(this.canvas, data.values[0].Y,
+                yPadding, data));
+
+        data.values.forEach((element, index) => {
+            this.context.moveTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                Utils.getYPixel(this.canvas, data.values[0].Y,
+                0, data));
+
+            this.context.lineTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                Utils.getYPixel(this.canvas, element.Y, yPadding, data));
+        });
+
+        this.context.stroke();
     }
 }

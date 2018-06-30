@@ -19,12 +19,11 @@ export default class Utils {
     static getMaxY(data: any): number {
         let max = 0;
 
-        for (var i = 0; i < data.values.length; i++) {
-            if (data.values[i].Y > max) {
-                max = data.values[i].Y;
+        data.values.forEach(element => {
+            if (element.Y > max) {
+                max = element.Y;
             }
-        }
-
+        });
         max += 10 - max % 10;
         return max;
     }
