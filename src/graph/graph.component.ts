@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef } from "@angular/core";
+import { Component, ViewChild, OnInit, ElementRef, Input } from "@angular/core";
 import Utils from "./utilities/graph.helper";
 
 @Component({
@@ -8,10 +8,16 @@ import Utils from "./utilities/graph.helper";
 
 export class GraphComponent implements OnInit {
     @ViewChild('myCanvas') canvas: ElementRef
+    private chartType: string
+
+
     private context: CanvasRenderingContext2D
 
+    constructor() {
+    }
 
     ngOnInit(): void {
+        this.chartType = this.canvas.nativeElement.getAttribute('data-chartType');
         this.context = this.canvas.nativeElement.getContext('2d');
 
         // TODO - Need to move the data part in service
@@ -52,17 +58,34 @@ export class GraphComponent implements OnInit {
         this.context.stroke()
 
         this.context.strokeStyle = '#f00';
+
+        this.context.strokeStyle = '#f00';
         this.context.beginPath();
-        this.context.lineWidth = 10
         this.context.moveTo(Utils.getXPixel(this.canvas, 0, xPadding, data),
-                Utils.getYPixel(this.canvas, data.values[0].Y,
+            Utils.getYPixel(this.canvas, data.values[0].Y,
                 yPadding, data));
 
         data.values.forEach((element, index) => {
-            this.context.moveTo(Utils.getXPixel(this.canvas, index, xPadding, data),
-                Utils.getYPixel(this.canvas, data.values[0].Y,
-                0, data));
-
+            console.log(this.chartType);
+            switch (this.chartType) {
+                case 'linear':
+                    this.context.lineTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                        Utils.getYPixel(this.canvas, element.Y, yPadding, data));
+                    break;
+                case 'bar':
+                    this.context.lineWidth = 10
+                    this.context.moveTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                        Utils.getYPixel(this.canvas, data.values[0].Y,
+                            0, data));
+                    this.context.moveTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                        Utils.getYPixel(this.canvas, data.values[0].Y,
+                            0, data));
+                default:
+                    this.context.moveTo(Utils.getXPixel(this.canvas, index, xPadding, data),
+                        Utils.getYPixel(this.canvas, data.values[0].Y,
+                            0, data));
+                    break;
+            }
             this.context.lineTo(Utils.getXPixel(this.canvas, index, xPadding, data),
                 Utils.getYPixel(this.canvas, element.Y, yPadding, data));
         });
